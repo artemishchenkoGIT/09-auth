@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_META_URL } from '@/utils/consts';
-import SignUpClient from './signUp.client';
+import SignUpClient from './SignUp.client';
 
 const title = 'Create an Account | NoteHub';
 const description =

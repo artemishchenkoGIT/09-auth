@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_META_URL } from '@/utils/consts';
-import SignInClient from './signIn.client';
+import SignInClient from './SignIn.client';
 
 const title = 'Sign In | NoteHub';
 const description =
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: SITE_META_URL,
-    siteName: title,
+    siteName: 'NoteHub',
     images: [
       {
         url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
