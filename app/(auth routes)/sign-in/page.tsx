@@ -1,39 +1,73 @@
-import type { Metadata } from 'next';
-import { SITE_META_URL } from '@/utils/consts';
-import SignInClient from './SignIn.client';
+'use client';
 
-const title = 'Sign In | NoteHub';
-const description =
-  'Sign in to your NoteHub account to access, organize, and manage your notes.';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { login } from '@/lib/api/clientApi';
+import { AuthRequest } from '@/types/requests';
+import { ApiError } from '@/types/apiError';
+import { useAuthStore } from '@/lib/store/authStore';
+import css from './SignInPage.module.css';
 
-export const metadata: Metadata = {
-  title,
-  description,
-  openGraph: {
-    title,
-    description,
-    url: SITE_META_URL,
-    siteName: 'NoteHub',
-    images: [
-      {
-        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
-        width: 1200,
-        height: 630,
-        alt: title,
-      },
-    ],
-    type: 'article',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description,
-    images: ['https://ac.goit.global/fullstack/react/notehub-og-meta.jpg'],
-  },
-};
+export default function SignInPage() {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const setUser = useAuthStore(state => state.setUser);
 
-function SignIn() {
-  return <SignInClient />;
+  async function handleSubmit(formData: FormData) {
+    try {
+      const formValues = Object.fromEntries(formData) as AuthRequest;
+      const res = await login(formValues);
+
+      if (res) {
+        setUser(res);
+        router.push('/profile');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (error) {
+      setError(
+        (error as ApiError).response?.data?.error ??
+          (error as ApiError).message ??
+          'Oops... some error'
+      );
+    }
+  }
+
+  return (
+    <main className={css.mainContent}>
+      <form className={css.form} action={handleSubmit}>
+        <h1 className={css.formTitle}>Sign in</h1>
+
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Log in
+          </button>
+        </div>
+
+        {error && <p className={css.error}>{error}</p>}
+      </form>
+    </main>
+  );
 }
-
-export default SignIn;
