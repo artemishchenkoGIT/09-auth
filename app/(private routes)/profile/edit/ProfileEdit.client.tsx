@@ -18,10 +18,10 @@ function ProfileEditClient() {
   const updateMutation = useMutation({
     mutationFn: updateMe,
     onSuccess: updatedUser => {
+      setUser(updatedUser);
       queryClient.invalidateQueries({
         queryKey: ['user'],
       });
-      setUser(updatedUser);
       toast.success('Update success');
       router.push('/profile');
     },

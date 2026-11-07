@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
 };
 
-function SignUp() {
+function SignIn() {
   return <SignInClient />;
 }
 
-export default SignUp;
+export default SignIn;

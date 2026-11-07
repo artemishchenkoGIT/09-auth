@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: SITE_META_URL,
-    siteName: title,
+    siteName: 'NoteHub',
     images: [
       {
         url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
