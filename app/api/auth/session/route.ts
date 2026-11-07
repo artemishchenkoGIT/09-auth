@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { api } from '../../api';
 import { cookies } from 'next/headers';
+import { api } from '../../api';
 import { parseSetCookie } from 'cookie';
 import { isAxiosError } from 'axios';
 import { logErrorResponse } from '../../_utils/utils';
@@ -8,8 +8,7 @@ import { logErrorResponse } from '../../_utils/utils';
 export async function GET() {
   try {
     const cookieStore = await cookies();
-
-    const accessToken = cookieStore.get('accesToken')?.value;
+    const accessToken = cookieStore.get('accessToken')?.value;
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (accessToken) {
@@ -27,12 +26,11 @@ export async function GET() {
 
       if (setCookie) {
         const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
-
         for (const cookieStr of cookieArray) {
-          const { name, value, ...parsed } = parseSetCookie(cookieStr);
+          const parsed = parseSetCookie(cookieStr);
 
-          if (value) {
-            cookieStore.set(name, value, parsed);
+          if (parsed.value) {
+            cookieStore.set(parsed.name, parsed.value, parsed);
           }
         }
         return NextResponse.json({ success: true }, { status: 200 });

@@ -8,6 +8,7 @@ import { logErrorResponse } from '../../_utils/utils';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
     const apiRes = await api.post('auth/register', body);
 
     const cookieStore = await cookies();
@@ -16,14 +17,15 @@ export async function POST(req: NextRequest) {
     if (setCookie) {
       const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
       for (const cookieStr of cookieArray) {
-        const { name, value, ...parsed } = parseSetCookie(cookieStr);
+        const parsed = parseSetCookie(cookieStr);
 
-        if (value) {
-          cookieStore.set(name, value, parsed);
+        if (parsed.value) {
+          cookieStore.set(parsed.name, parsed.value, parsed);
         }
       }
       return NextResponse.json(apiRes.data, { status: apiRes.status });
     }
+
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   } catch (error) {
     if (isAxiosError(error)) {
