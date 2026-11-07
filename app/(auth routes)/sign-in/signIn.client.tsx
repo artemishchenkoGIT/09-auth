@@ -1,11 +1,38 @@
 'use client';
 
 import { login } from '@/lib/api/clientApi';
-import { useAuthHandleSubmit } from '@/hooks/useAuthHandleSubmit';
+import { AuthRequest } from '@/types/requests';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ApiError } from '@/types/apiError';
+import { useAuthStore } from '@/lib/store/authStore';
 import css from './SignInPage.module.css';
 
 function SignInClient() {
-  const { handleSubmit, error } = useAuthHandleSubmit(login);
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const setUser = useAuthStore(state => state.setUser);
+
+  async function handleSubmit(formData: FormData) {
+    try {
+      const formValues = Object.fromEntries(formData) as AuthRequest;
+
+      const res = await login(formValues);
+
+      if (res) {
+        setUser(res);
+        router.push('/profile');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (error) {
+      setError(
+        (error as ApiError).response?.data?.error ??
+          (error as ApiError).message ??
+          'Oops... some error'
+      );
+    }
+  }
 
   return (
     <main className={css.mainContent}>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title,
     description,
-    url: `${SITE_META_URL}/notes/action/create`,
+    url: `${SITE_META_URL}/profile/edit`,
     siteName: 'NoteHub',
     images: [
       {
